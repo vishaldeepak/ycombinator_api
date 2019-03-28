@@ -4,6 +4,7 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.integer :karma
       t.text :about
       t.string :email
+      t.string :username, null: false
 
       t.timestamps
     end
