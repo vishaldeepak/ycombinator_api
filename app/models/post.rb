@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
   validates :title, length: { minimum: 7}
-  validates :url, url: true
+  validates :url, url: { allow_nil: true }
   before_validation :strip_whitespace
   belongs_to :user
 

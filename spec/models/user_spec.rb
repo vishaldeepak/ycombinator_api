@@ -10,4 +10,8 @@ RSpec.describe User, type: :model do
     user = User.new();
     expect(user).to_not be_valid
   end
+
+  describe "Associations" do
+    it { should have_many(:posts) }
+  end
 end

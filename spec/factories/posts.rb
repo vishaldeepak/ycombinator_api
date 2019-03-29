@@ -4,7 +4,7 @@ FactoryBot.define do
     title {"test post"}
 
     factory :post_proper do
-      url  { "www.google.com" }
+      url  { "http://www.google.com" }
       content { "Hello this is a test post used for testing purposes" }
     end
 
