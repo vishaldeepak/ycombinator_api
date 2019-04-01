@@ -6,6 +6,8 @@ class PostsController < ApplicationController
   end
 
   def create
+    @post = Post.create!(post_params)
+    render json: @post, status: :ok
   end
 
   def update
@@ -27,5 +29,10 @@ class PostsController < ApplicationController
   private
   def set_post
     @post = Post.find(params[:id])
+  end
+
+  def post_params
+    #Needs to be changed after implementing login
+    params.permit(:title, :user_id)
   end
 end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PostsController, type: :controller do
+RSpec.describe 'Posts API', type: :request do
   let!(:all_posts) { create_list(:post, 10) }
   let(:post_id) { all_posts.first.id }
 
@@ -11,12 +11,23 @@ RSpec.describe PostsController, type: :controller do
   #   end
   # end
 
-  # describe "GET #create" do
-  #   it "returns http success" do
-  #     get :create
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe "POST /post" do
+    let(:attributes) {{title: "This is a post", user_id: User.first.id}}
+
+    context "when the request is valid" do
+      before { post '/posts', params: attributes}
+
+      it 'creates a post' do
+        expect(to_json['title']).to eq('This is a post')
+      end
+
+      it 'returns status code of 201' do
+        expect(response).to have_http_status(201)
+      end
+    end
+
+    #invalidity checked mostly by post_spec
+  end
 
   # describe "GET #update" do
   #   it "returns http success" do
@@ -40,7 +51,7 @@ RSpec.describe PostsController, type: :controller do
   # end
 
   describe "GET /posts/:id" do
-    before { get :show, params: {id: post_id} }
+    before { get "/posts/#{post_id}" }
 
     context 'when the record exists' do
       it 'returns the post' do
@@ -51,7 +62,14 @@ RSpec.describe PostsController, type: :controller do
       it "returns http success" do
         expect(response).to have_http_status(:success)
       end
+    end
 
+    context 'when the record does not exist' do
+      let(:post_id) {9999}
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
     end
   end
 
