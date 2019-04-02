@@ -14,5 +14,6 @@ RSpec.describe User, type: :model do
   describe "Associations" do
     it { should have_many(:posts) }
     it { should validate_presence_of(:username)}
+    it { should validate_presence_of(:password_digest)}
   end
 end

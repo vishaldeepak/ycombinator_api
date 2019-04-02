@@ -22,6 +22,9 @@ gem "validate_url"
 #Token based authentication
 gem 'jwt'
 
+#For secure passwords
+gem 'bcrypt', '~> 3.1', '>= 3.1.12'
+
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
