@@ -29,12 +29,36 @@ RSpec.describe 'Posts API', type: :request do
     #invalidity checked mostly by post_spec
   end
 
-  # describe "GET #update" do
-  #   it "returns http success" do
-  #     get :update
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'PUT /posts/:id' do
+    let(:valid_attributes) { { title: 'Updated Post' } }
+
+    context 'when the record exists' do
+      before { put "/posts/#{post_id}", params: valid_attributes }
+
+      it 'updates the record' do
+        expect(Post.find(post_id).title).to eq('Updated Post')
+        expect(response.body).to be_empty
+      end
+
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+    end
+  end
+
+  describe 'DELETE /posts/:id' do
+    # let(:post_new_id) { create(:post).id }
+    before { delete "/posts/#{post_id}"}
+
+    it 'deletes the post' do
+      expect(Post.find_by(id: post_id)).to be_nil
+      expect(Post.count).to eq(9)
+    end
+
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+  end
 
   # describe "GET #edit" do
   #   it "returns http success" do

@@ -1,29 +1,29 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :update, :destroy]
 
-
-  def new
-  end
-
   def create
     @post = Post.create!(post_params)
-    render json: @post, status: :ok
-  end
-
-  def update
-  end
-
-  def edit
+    render json: @post, status: :created
   end
 
   def destroy
+    @post.destroy
+    head :no_content
+  end
+
+  def index
+    #Change implementation to something else other than new
+    @posts = Post.created_order.limit(10)
+    render json: @posts, status: :ok
   end
 
   def show
     render json: @post, status: :ok
   end
 
-  def index
+  def update
+    @post.update(post_params)
+    head :no_content
   end
 
   private

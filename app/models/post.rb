@@ -4,6 +4,8 @@ class Post < ApplicationRecord
   before_validation :strip_whitespace
   belongs_to :user
 
+  scope :created_order, -> { order("created_at DESC")}
+
   private
   def strip_whitespace
     self.title = self.title.strip unless self.title.nil?
