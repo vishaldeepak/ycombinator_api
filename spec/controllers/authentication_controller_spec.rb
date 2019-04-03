@@ -13,13 +13,10 @@ RSpec.describe 'Auth API', type: :request do
       before { post '/auth/login', params: attributes, headers: headers}
 
       it "should return a valid token" do
-        expect(to_json['auth_token']).to_not be_nil
+        expect(get_json['auth_token']).to_not be_nil
       end
 
-      #This could be dried
-      it 'returns status code of 200' do
-        expect(response).to have_http_status(200)
-      end
+      it_behaves_like "status ok respsone"
     end
 
     context "when the request is invalid" do
@@ -28,12 +25,12 @@ RSpec.describe 'Auth API', type: :request do
       end
       before { post '/auth/login', params: invalid_attributes, headers: headers}
 
-      it "returns status code 422" do
+      it "returns status code 401" do
         expect(response).to have_http_status(401)
       end
 
       it "returns a failure message" do
-        expect(to_json['message']).to match(/Invalid credentials/)
+        expect(get_json['message']).to match(/Invalid credentials/)
       end
     end
   end

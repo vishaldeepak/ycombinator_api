@@ -11,12 +11,10 @@ RSpec.describe 'Posts API', type: :request do
       before { post '/posts', params: attributes}
 
       it 'creates a post' do
-        expect(to_json['title']).to eq('This is a post')
+        expect(get_json['title']).to eq('This is a post')
       end
 
-      it 'returns status code of 201' do
-        expect(response).to have_http_status(201)
-      end
+      it_behaves_like "status created respsone"
     end
 
     #invalidity checked mostly by post_spec
@@ -53,32 +51,16 @@ RSpec.describe 'Posts API', type: :request do
     end
   end
 
-  # describe "GET #edit" do
-  #   it "returns http success" do
-  #     get :edit
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
-
-  # describe "GET #destroy" do
-  #   it "returns http success" do
-  #     get :destroy
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
-
   describe "GET /posts/:id" do
     before { get "/posts/#{post_id}" }
 
     context 'when the record exists' do
       it 'returns the post' do
-        expect(to_json).not_to be_empty
-        expect(to_json['id']).to eq(post_id)
+        expect(get_json).not_to be_empty
+        expect(get_json['id']).to eq(post_id)
       end
 
-      it "returns http success" do
-        expect(response).to have_http_status(:success)
-      end
+      it_behaves_like "status ok respsone"
     end
 
     context 'when the record does not exist' do
@@ -89,12 +71,4 @@ RSpec.describe 'Posts API', type: :request do
       end
     end
   end
-
-  # describe "GET #index" do
-  #   it "returns http success" do
-  #     get :index
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
-
 end

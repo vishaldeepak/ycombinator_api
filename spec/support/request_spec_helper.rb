@@ -1,7 +1,7 @@
 # spec/support/request_spec_helper
 module RequestSpecHelper
   # Parse JSON response to ruby hash
-  def to_json
+  def get_json
     JSON.parse(response.body)
   end
 end
