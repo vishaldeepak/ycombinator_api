@@ -4,13 +4,6 @@ RSpec.describe 'Posts API', type: :request do
   let!(:all_posts) { create_list(:post, 10) }
   let(:post_id) { all_posts.first.id }
 
-  # describe "GET #new" do
-  #   it "returns http success" do
-  #     get :new
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
-
   describe "POST /post" do
     let(:attributes) {{title: "This is a post", user_id: User.first.id}}
 

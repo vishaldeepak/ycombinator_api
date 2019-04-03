@@ -14,8 +14,7 @@ class JsonWebToken
     body = JWT.decode(token, HMAC_SECRET)[0]
     HashWithIndifferentAccess.new body
     # rescue from all decode errors
-  rescue JWT::DecodeError => e
-    # raise custom error to be handled by custom handler
+    rescue JWT::DecodeError => e
     raise ExceptionHandler::InvalidToken, e.message
   end
 end
