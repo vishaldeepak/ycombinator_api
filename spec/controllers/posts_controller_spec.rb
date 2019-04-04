@@ -3,12 +3,15 @@ require 'rails_helper'
 RSpec.describe 'Posts API', type: :request do
   let!(:all_posts) { create_list(:post, 10) }
   let(:post_id) { all_posts.first.id }
+  let(:user) {User.first}
 
   describe "POST /post" do
-    let(:attributes) {{title: "This is a post", user_id: User.first.id}}
+    let(:attributes) do
+      {title: "This is a post", user_id: user.id}.to_json
+    end
 
     context "when the request is valid" do
-      before { post '/posts', params: attributes}
+      before { post '/posts', params: attributes, headers: valid_headers}
 
       it 'creates a post' do
         expect(get_json['title']).to eq('This is a post')
@@ -17,14 +20,20 @@ RSpec.describe 'Posts API', type: :request do
       it_behaves_like "status created respsone"
     end
 
-    #invalidity checked mostly by post_spec
+    it_behaves_like "a authorized action" do
+      let(:action_verb) {:post}
+      let(:action_path) {"/posts"}
+      let(:parameters) {attributes}
+    end
   end
 
   describe 'PUT /posts/:id' do
-    let(:valid_attributes) { { title: 'Updated Post' } }
+    let(:valid_attributes) do
+      { title: 'Updated Post' }.to_json
+    end
 
     context 'when the record exists' do
-      before { put "/posts/#{post_id}", params: valid_attributes }
+      before { put "/posts/#{post_id}", params: valid_attributes, headers: valid_headers}
 
       it 'updates the record' do
         expect(Post.find(post_id).title).to eq('Updated Post')
@@ -35,19 +44,31 @@ RSpec.describe 'Posts API', type: :request do
         expect(response).to have_http_status(204)
       end
     end
+
+    it_behaves_like "a authorized action" do
+      let(:action_verb) {:put}
+      let(:action_path) {"/posts/#{post_id}"}
+      let(:parameters) {valid_attributes}
+    end
   end
 
   describe 'DELETE /posts/:id' do
-    # let(:post_new_id) { create(:post).id }
-    before { delete "/posts/#{post_id}"}
+    context "when the record exists" do
+      before { delete "/posts/#{post_id}", headers: valid_headers}
 
-    it 'deletes the post' do
-      expect(Post.find_by(id: post_id)).to be_nil
-      expect(Post.count).to eq(9)
+      it 'deletes the post' do
+        expect(Post.find_by(id: post_id)).to be_nil
+        expect(Post.count).to eq(9)
+      end
+
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
     end
 
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+    it_behaves_like "a authorized action" do
+      let(:action_verb) {:delete}
+      let(:action_path) {"/posts/#{post_id}"}
     end
   end
 

@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :update, :destroy]
+  skip_before_action :authorize_request, only: [:index, :show], raise: false
 
   def create
     @post = Post.create!(post_params)

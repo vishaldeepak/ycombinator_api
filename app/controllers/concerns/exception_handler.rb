@@ -24,11 +24,12 @@ module ExceptionHandler
     #   json_response({ message: e.message }, :not_found)
     # end
 
-    rescue_from ExceptionHandler::MissingToken, with: error_four_twenty_two
-    rescue_from ExceptionHandler::InvalidToken, with: error_four_twenty_two
+    rescue_from ExceptionHandler::MissingToken, with: :error_four_twenty_two
+    rescue_from ExceptionHandler::InvalidToken, with: :error_four_twenty_two
 
   end
 
+  private
   def error_four_twenty_two(e)
     json_response({ message: e.message }, :unprocessable_entity)
   end

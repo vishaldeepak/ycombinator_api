@@ -1,4 +1,6 @@
 class AuthenticationController < ApplicationController
+  skip_before_action :authorize_request, raise: false
+
   def authenticate
     strong_params = auth_params
     token = AuthenticateUser.call(strong_params[:username], strong_params[:password])
