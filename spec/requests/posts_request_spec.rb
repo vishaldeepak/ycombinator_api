@@ -89,6 +89,47 @@ RSpec.describe 'Posts API', type: :request do
     end
   end
 
+  describe 'POST /posts/:id/unvote' do
+    let(:current_post) {Post.find(all_posts.first.id )}
+    let(:valid_attributes) do
+      {user_id: user.id}.to_json
+    end
+
+    context 'when the post exists' do
+      before {
+        Post.find(post_id).upvote_by user
+        user2 = create(:user)
+        Post.find(post_id).upvote_by user2
+        post "/posts/#{post_id}/unvote", params: valid_attributes, headers: valid_headers}
+
+      it "should decrease the count of upvotes" do
+        expect(current_post.cached_votes_up).to eq(1)
+      end
+
+      it "should remove upvote from appropriate user" do
+        expect(user.voted_for? (current_post)).to be(false)
+      end
+    end
+
+    context 'when the post does not exist' do
+      before { post "/posts/#{999999}/unvote", params: valid_attributes, headers: valid_headers}
+
+      it_behaves_like "status code 404"
+    end
+
+    context 'when the user does not exist' do
+      before { post "/posts/#{post_id}/unvote", params: {user: 999}.to_json, headers: valid_headers}
+
+      it_behaves_like "status code 404"
+    end
+
+    it_behaves_like "a authorized action" do
+      let(:action_verb) {:post}
+      let(:action_path) {"/posts/#{post_id}/unvote"}
+      let(:parameters) {valid_attributes}
+    end
+  end
+
   describe 'DELETE /posts/:id' do
     context "when the record exists" do
       before { delete "/posts/#{post_id}", headers: valid_headers}

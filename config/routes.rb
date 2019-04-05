@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :posts, except: [:new] do
     member do
       post 'vote'
+      post 'unvote'
     end
   end
 end
