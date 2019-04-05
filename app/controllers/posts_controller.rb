@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :update, :destroy]
+  before_action :set_post, only: [:show, :update, :destroy, :vote]
   skip_before_action :authorize_request, only: [:index, :show], raise: false
 
   def create
@@ -25,6 +25,12 @@ class PostsController < ApplicationController
   def update
     @post.update(post_params)
     head :no_content
+  end
+
+  def vote
+    user = User.find(params[:user_id])
+    @post.upvote_by user
+    render json: "User voted registered", status: :ok
   end
 
   private

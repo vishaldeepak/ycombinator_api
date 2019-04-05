@@ -1,4 +1,6 @@
 class Post < ApplicationRecord
+  acts_as_votable
+
   validates :title, length: { minimum: 7}
   validates :url, url: { allow_nil: true }
   before_validation :strip_whitespace

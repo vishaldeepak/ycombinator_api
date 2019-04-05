@@ -52,6 +52,43 @@ RSpec.describe 'Posts API', type: :request do
     end
   end
 
+  describe 'POST /posts/:id/vote' do
+    let(:current_post) {Post.find(all_posts.first.id )}
+    let(:valid_attributes) do
+      {user_id: user.id}.to_json
+    end
+
+    context 'when the post exists' do
+      before { post "/posts/#{post_id}/vote", params: valid_attributes, headers: valid_headers}
+
+      it "should increase the count of upvotes" do
+        expect(current_post.cached_votes_up).to eq(1)
+      end
+
+      it "should have upvote from appropriate user" do
+        expect(user.voted_for? (current_post)).to be(true)
+      end
+    end
+
+    context 'when the post does not exist' do
+      before { post "/posts/#{999999}/vote", params: valid_attributes, headers: valid_headers}
+
+      it_behaves_like "status code 404"
+    end
+
+    context 'when the user does not exist' do
+      before { post "/posts/#{post_id}/vote", params: {user: 999}.to_json, headers: valid_headers}
+
+      it_behaves_like "status code 404"
+    end
+
+    it_behaves_like "a authorized action" do
+      let(:action_verb) {:post}
+      let(:action_path) {"/posts/#{post_id}/vote"}
+      let(:parameters) {valid_attributes}
+    end
+  end
+
   describe 'DELETE /posts/:id' do
     context "when the record exists" do
       before { delete "/posts/#{post_id}", headers: valid_headers}
@@ -87,9 +124,7 @@ RSpec.describe 'Posts API', type: :request do
     context 'when the record does not exist' do
       let(:post_id) {9999}
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
+      it_behaves_like "status code 404"
     end
   end
 end
