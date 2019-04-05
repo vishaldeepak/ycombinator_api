@@ -1,7 +1,7 @@
 RSpec.shared_examples "a authorized action" do
   context "when the token is invalid" do
     before {
-
+      #Can be improved with send()
       case action_verb
       when :get
         get action_path, headers: invalid_headers
