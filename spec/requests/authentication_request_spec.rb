@@ -13,7 +13,11 @@ RSpec.describe 'Auth API', type: :request do
       before { post '/auth/login', params: attributes, headers: headers}
 
       it "should return a valid token" do
-        expect(get_json['auth_token']).to_not be_nil
+        expect(get_json['token']).to_not be_nil
+      end
+
+      it "should return a valid user_id" do
+        expect(get_json['userId']).to be(user.id)
       end
 
       it_behaves_like "status ok respsone"

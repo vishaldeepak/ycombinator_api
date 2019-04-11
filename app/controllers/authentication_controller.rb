@@ -3,8 +3,8 @@ class AuthenticationController < ApplicationController
 
   def authenticate
     strong_params = auth_params
-    token = AuthenticateUser.call(strong_params[:username], strong_params[:password])
-    json_response(auth_token: token)
+    resposnse = AuthenticateUser.call(strong_params[:username], strong_params[:password])
+    json_response(resposnse)
   end
 
   private
