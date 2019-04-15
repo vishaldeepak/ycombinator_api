@@ -37,6 +37,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 #Allow for upvotes on posts and comments
 gem 'acts_as_votable', '~> 0.12.0'
 
+#JSON:API serializer for Ruby Objects.
+gem 'fast_jsonapi'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 

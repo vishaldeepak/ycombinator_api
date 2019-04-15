@@ -14,8 +14,8 @@ class PostsController < ApplicationController
 
   def index
     #Change implementation to something else other than new
-    @posts = Post.created_order.limit(10)
-    render json: @posts, status: :ok
+    @posts = Post.includes(:user).created_order.limit(30)
+    render json: PostSerializer.new(@posts).serialized_json, status: :ok
   end
 
   def show
