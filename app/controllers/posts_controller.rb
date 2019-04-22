@@ -15,7 +15,8 @@ class PostsController < ApplicationController
   def index
     #Change implementation to something else other than new
     @posts = Post.includes(:user).created_order.limit(30)
-    render json: PostSerializer.new(@posts).serialized_json, status: :ok
+    user_upvoted_posts = @current_user.get_up_voted(Post).where(id: @posts.map(&:id)).pluck(:id) if @current_user
+    render json: PostSerializer.new(@posts, {params: {user_upvoted_posts: user_upvoted_posts}}).serialized_json, status: :ok
   end
 
   def show

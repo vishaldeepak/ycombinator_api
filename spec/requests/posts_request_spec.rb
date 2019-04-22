@@ -100,7 +100,8 @@ RSpec.describe 'Posts API', type: :request do
         Post.find(post_id).upvote_by user
         user2 = create(:user)
         Post.find(post_id).upvote_by user2
-        post "/posts/#{post_id}/unvote", params: valid_attributes, headers: valid_headers}
+        post "/posts/#{post_id}/unvote", params: valid_attributes, headers: valid_headers
+      }
 
       it "should decrease the count of upvotes" do
         expect(current_post.cached_votes_up).to eq(1)
@@ -166,6 +167,27 @@ RSpec.describe 'Posts API', type: :request do
       let(:post_id) {9999}
 
       it_behaves_like "status code 404"
+    end
+  end
+
+  describe "GET /posts" do
+    before {
+      Post.find(post_id).upvote_by user
+      get "/posts", headers: valid_headers
+    }
+
+    it_behaves_like "status ok respsone"
+
+    context "when user token is give" do
+      it "returns true for upvoted user post" do
+        upvoted_post = get_json['data'].find { |post| post['id'] == post_id.to_s }
+        expect(upvoted_post['attributes']['userUpvotedPost']).to be true
+      end
+
+      it "returns false for not voted user post" do
+        upvoted_post = get_json['data'].find { |post| post['id'] != post_id.to_s }
+        expect(upvoted_post['attributes']['userUpvotedPost']).to be false
+      end
     end
   end
 end

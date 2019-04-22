@@ -16,5 +16,13 @@ class PostSerializer
     "#{time_ago_in_words(object.created_at)} ago"
   end
 
+  attribute :user_upvoted_post do |object, params|
+    if params[:user_upvoted_posts]
+      params[:user_upvoted_posts].include? object.id
+    else
+      false
+    end
+  end
+
   belongs_to :user
 end
